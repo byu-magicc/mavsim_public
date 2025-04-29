@@ -54,3 +54,11 @@ workon name_of_env
 
 deactivate
 
+# Create a `conda` environment
+
+Alternatively, if you prefer to use [`anaconda`](https://www.anaconda.com/download) or [`miniconda`](https://docs.conda.io/projects/miniconda/en/latest/) for managing your python environment, you can use the `environment.yml` file in this folder:
+
+```shell
+conda env create -f environment.yml
+conda activate uavbook
+```
