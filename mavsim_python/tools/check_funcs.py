@@ -13,7 +13,7 @@ import tools.color
 lpad = 17
 
 def err_msg_scalar(soln, check):
-    str_fail    = f"{tools.color.red("FAIL"):<28}"
+    str_fail    = f"{tools.color.red('FAIL'):<28}"
     str_ck      = f"yours = {tools.color.red(check):<37}"
     str_soln    = f"expected = {tools.color.violet(soln)}"
     return ''.join([str_fail, str_ck, str_soln])
@@ -30,7 +30,7 @@ def ck_err(soln, check):
         if soln == 0.:
             pass_zero = check < tol_zero
             if pass_zero:
-                return f"{tools.color.green("PASS")}"
+                return f"{tools.color.green('PASS')}"
             else:
                 return err_msg_scalar(soln, check)
             #
@@ -40,7 +40,7 @@ def ck_err(soln, check):
         err_perc = err_abs / np.abs(soln)
         pass_perc = err_perc < tol_perc
         if pass_perc:
-            return f"{tools.color.green("PASS")}"
+            return f"{tools.color.green('PASS')}"
         else:
             return err_msg_scalar(soln, check)
         #
@@ -65,15 +65,15 @@ def ck_err(soln, check):
     corr_idxs[mask1] = err_percent[mask1] < tol_perc
 
     if corr_idxs.all():
-        return f"{tools.color.green("PASS")}"
+        return f"{tools.color.green('PASS')}"
     else:
         wrong_val_mask = np.logical_not(corr_idxs)
         wrong_val_idxs = np.argwhere(wrong_val_mask)
-        msg = [f"{tools.color.red("FAIL")}"]
+        msg = [f"{tools.color.red('FAIL')}"]
         for idx in wrong_val_idxs:
             idx_str = f"idx {tools.color.blue(idx)}"
-            chk_str = f"yours = {tools.color.red(check[*idx])}"
-            sln_str = f"expected = {tools.color.violet(soln[*idx])}"
+            chk_str = f"yours = {tools.color.red(check[idx])}"
+            sln_str = f"expected = {tools.color.violet(soln[idx])}"
             msg.append(f'{idx_str:>{45}}: {chk_str:<{45}}{sln_str}')
         return '\n'.join(msg)
     #
