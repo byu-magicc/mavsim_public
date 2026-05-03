@@ -7,9 +7,9 @@ mavsim: manage_viewers
 """
 import pyqtgraph as pg
 from viewers.mav_viewer import MavViewer
-from viewers.mav_viewer_path import MavAndPathViewer
-from viewers.mav_viewer_waypoint import MAVAndWaypointViewer
-from viewers.mav_viewer_map import MAVWorldViewer
+from viewers.mav_path_viewer import MavAndPathViewer
+from viewers.mav_waypoint_viewer import MAVAndWaypointViewer
+from viewers.mav_world_viewer import MAVWorldViewer
 from viewers.mav_viewer_camera import MAVWorldCameraViewer
 from viewers.planner_viewer import PlannerViewer
 from viewers.data_viewer import DataViewer
@@ -25,18 +25,18 @@ from message_types.msg_waypoints import MsgWaypoints
 from message_types.msg_world_map import MsgWorldMap
 
 class ViewManager:
-    def __init__(self, 
+    def __init__(self,
                  mav: bool=False,
                  path: bool=False,
                  waypoint: bool=False,
                  planning: bool=False,
                  map: bool=False,
                  camera: bool=False,
-                 sensors: bool=False, 
+                 sensors: bool=False,
                  geo: bool=False,
-                 data: bool=False, 
+                 data: bool=False,
                  save_plots: bool=False,
-                 video: bool=False, 
+                 video: bool=False,
                  video_name: str=[],
                  ):
         self.mav_flag = mav
@@ -51,8 +51,8 @@ class ViewManager:
         self.save_plots_flag = save_plots
         self.video_flag = video
         # initial pyqt application
-        self.app = pg.QtWidgets.QApplication([]) 
-        # initialize video 
+        self.app = pg.QtWidgets.QApplication([])
+        # initialize video
         if self.video_flag is True:
             from viewers.video_writer import VideoWriter
             self.video = VideoWriter(
@@ -70,36 +70,36 @@ class ViewManager:
         elif self.path_flag:
             self.mav_view = MavAndPathViewer(app=self.app)
         elif self.mav_flag:
-            self.mav_view = MavViewer(app=self.app)  
+            self.mav_view = MavViewer(app=self.app)
         if self.planning_flag:
             self.planner_viewer = PlannerViewer(app=self.app)
-        if self.data_flag: 
+        if self.data_flag:
             self.data_view = DataViewer(
                 app=self.app,
                 dt=SIM.ts_simulation,
-                plot_period=SIM.ts_plot_refresh, 
-                data_recording_period=SIM.ts_plot_record_data, 
+                plot_period=SIM.ts_plot_refresh,
+                data_recording_period=SIM.ts_plot_record_data,
                 time_window_length=30)
-        if self.sensor_flag: 
+        if self.sensor_flag:
             self.sensor_view = SensorViewer(
                 app=self.app,
-                dt=SIM.ts_simulation, 
-                plot_period=SIM.ts_plot_refresh, 
-                data_recording_period=SIM.ts_plot_record_data, 
+                dt=SIM.ts_simulation,
+                plot_period=SIM.ts_plot_refresh,
+                data_recording_period=SIM.ts_plot_record_data,
                 time_window_length=30)
         if self.geo_flag:
             self.geo_viewer = GeolocationViewer(
                 app=self.app,
-                dt=SIM.ts_simulation, 
-                plot_period=SIM.ts_plot_refresh, 
-                data_recording_period=SIM.ts_plot_record_data, 
+                dt=SIM.ts_simulation,
+                plot_period=SIM.ts_plot_refresh,
+                data_recording_period=SIM.ts_plot_record_data,
                 time_window_length=30)
 
     def update(self,
                sim_time: float,
-               true_state: MsgState=None, 
-               estimated_state: MsgState=None, 
-               commanded_state: MsgState=None, 
+               true_state: MsgState=None,
+               estimated_state: MsgState=None,
+               commanded_state: MsgState=None,
                delta: MsgDelta=None,
                measurements: MsgSensors=None,
                path: MsgPath=None,
@@ -126,12 +126,12 @@ class ViewManager:
                 estimated_state,  # estimated states
                 commanded_state,  # commanded states
                 delta,  # inputs to aircraft
-                )  
-        if self.sensor_flag: 
+                )
+        if self.sensor_flag:
             self.sensor_view.update(measurements)
         if self.geo_flag:
             self.geo_viewer.update(estimated_target, target)
-        if self.video_flag is True: 
+        if self.video_flag is True:
             self.video.update(sim_time)
         self.app.processEvents()
 
@@ -142,19 +142,18 @@ class ViewManager:
                tree: MsgWaypoints=None,
                radius: float=0.):
         self.planner_viewer.draw_tree_and_map(
-            map, 
-            tree, 
-            waypoints_not_smooth, 
+            map,
+            tree,
+            waypoints_not_smooth,
             waypoints,
             radius)
 
     def close(self, dataplot_name: str=[], sensorplot_name: str=[]):
         # Save an Image of the Plot
         if self.save_plots_flag:
-            if self.data_flag: 
+            if self.data_flag:
                 self.data_view.save_plot_image(dataplot_name)
-            if self.sensor_flag: 
+            if self.sensor_flag:
                 self.sensor_view.save_plot_image(sensorplot_name)
-        if self.video_flag: 
+        if self.video_flag:
             self.video.close()
-

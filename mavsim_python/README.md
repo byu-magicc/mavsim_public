@@ -1,56 +1,52 @@
-# Setup your python environment
+# Setting Up Your Python Environment
 
+## Install Core Dependencies
+
+```bash
 pip3 install --upgrade pip
+pip3 install numpy scipy matplotlib pyqtgraph pyqt6 pyopengl pynput numpy-stl
+```
 
-pip3 install numpy
+> **Note for ROS users:** If you have ROS installed and encounter issues with the data viewer, run the following and then reinstall PyQt6:
+> ```bash
+> sudo apt autoremove pyqt6*
+> ```
+> If problems persist, consider cleaning your Python environment or using a virtual environment ([see below](#creating-a-python-virtual-environment)).
 
-pip3 install scipy
+## Video Writer Dependencies
 
-pip3 install matplotlib
+```bash
+pip3 install opencv-python Pillow
+```
 
-pip3 install pyqtgraph
+---
 
-pip3 install pyqt6
+## Creating a Python Virtual Environment
 
-pip3 install pyopengl
+### 1. Install virtualenvwrapper
 
-pip3 install pynput
-
-#sometimes there are issues with that data_viewer if you have ROS installed on your system, in this case. If you are having problems
-#with the data viewer try running the following in the commandline and then reinstalling pqt6. 
-
-sudo apt autoremove pyqt6*
-
-#If you still have problems try cleaning your python environment or using a virtual environment.
-
-#To run the video writer install the following
-
-pip3 install opencv-python
-pip3 install Pillow
-
-
-
-# Creating a python virtual environment
-
-#First install virtualenvwrapper
-
+```bash
 pip3 install virtualenvwrapper
+```
 
-#Export and source the appropriate files in bashrc file
+### 2. Configure your shell
 
-export VIRTUALENVWRAPPER_PYTHON='/usr/bin/python3' 
+Add the following to your `~/.bashrc` file:
 
-source /home/username/.local/bin/virtualenvwrapper.sh 
+```bash
+export VIRTUALENVWRAPPER_PYTHON='/usr/bin/python3'
+source /home/username/.local/bin/virtualenvwrapper.sh
+```
 
-#create and environment
+### 3. Create and use an environment
 
-mkvirtualenv name_of_env 
+```bash
+# Create a new environment
+mkvirtualenv name_of_env
 
-#start using environment
-
+# Activate the environment
 workon name_of_env
 
-#close environemnt
-
+# Deactivate when done
 deactivate
-
+```

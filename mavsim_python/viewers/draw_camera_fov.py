@@ -8,7 +8,7 @@ import numpy as np
 from numpy import cos, sin
 from numpy.linalg import norm
 import pyqtgraph.opengl as gl
-from tools.rotations import Euler2Rotation
+import tools.rotations
 import parameters.camera_parameters as CAM
 
 
@@ -51,8 +51,8 @@ class DrawFov:
     def getTransformedMesh(self, state):
         mav_position = np.array([[state.north], [state.east], [-state.altitude]])  # NED coordinates
         # attitude of mav as a rotation matrix R from body to inertial
-        R = Euler2Rotation(state.phi, state.theta, state.psi)
-        Rcam = Euler2Rotation(0, state.camera_el, state.camera_az)
+        R = tools.rotations.euler_to_rotation(state.phi, state.theta, state.psi)
+        Rcam = tools.rotations.euler_to_rotation(0, state.camera_el, state.camera_az)
         # rotate and translate points defining mav
         rotated_points = self.rotatePoints(self.rotatePoints(self.fov_points, Rcam), R)
         projected_points = self.projectOnGroundPlane(rotated_points, mav_position)
